@@ -72,7 +72,8 @@ public class BookController {
             result.rejectValue("isbn", "required", "ISBNは必須です");
             } else if(bookMstDto.getIsbn().length() != 13){
                 result.rejectValue("isbn", "length", "ISBNは13桁で入力してください");
-            } else if (!bookMstDto.getIsbn().matches("\\d+")) {
+            }
+         if (!bookMstDto.getIsbn().matches("\\d+")) {
             result.rejectValue("isbn", "format", "ISBNは半角数字で入力してください");
             }
         
@@ -86,7 +87,7 @@ public class BookController {
 
 //ISBN重複チェック
 if (bookMstService.isbnExists(bookMstDto.getIsbn()) > 0){
-    result.rejectValue("isbn", "duplicate","このISBNは既に登録されています");)
+    result.rejectValue("isbn", "duplicate","このISBNは既に登録されています");
 }
 
         if (result.hasErrors()){

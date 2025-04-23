@@ -56,9 +56,9 @@ public class BookMstService {
             bookMstRepository.save(bookMst);
         }
 
-    //     public boolean isbnExists(String isbn){
-    //         return bookMstRepository.existByIsbn(isbn);
-    // }
+    public int isbnExists(String isbn){
+        return bookMstRepository.existByIsbn(isbn);
+}
 }
 
 
