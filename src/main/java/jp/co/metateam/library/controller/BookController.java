@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import jp.co.metateam.library.model.Account;
+import jp.co.metateam.library.model.AccountDto;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.BookMstService;
@@ -50,5 +52,53 @@ public class BookController {
 
         return "book/add";
     }
+
     
+
+    @PostMapping("/book/add")
+    public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra){
+
+
+//書籍名必須と文字数チェック
+        if(bookMstDto.getTitle() == null || bookMstDto.getTitle().isEmpty()) {
+            result.rejectValue("title", "required", "書籍名は必須です");
+        } else {if(bookMstDto.getTitle().length() > 255){
+                result.rejectValue("title", "length", "書籍名は255字以内で入力してください");
+            }
+        }
+       
+//ISBNチェック
+        if(bookMstDto.getIsbn() == null || bookMstDto.getIsbn().isEmpty()) {
+            result.rejectValue("isbn", "required", "ISBNは必須です");
+            } else if(bookMstDto.getIsbn().length() != 13){
+                result.rejectValue("isbn", "length", "ISBNは13桁で入力してください");
+            }
+         if (!bookMstDto.getIsbn().matches("\\d+")) {
+            result.rejectValue("isbn", "format", "ISBNは半角数字で入力してください");
+            }
+        
+            if (result.hasErrors()){
+                return "/book/add";
+            }
+           
+            // if (bookMstService.isbnExists(bookMstDto.getIsbn())){
+            // result.rejectValue("isbn", "duplicate", "このISBNは既に登録されています");
+            // }
+
+//ISBN重複チェック
+if (bookMstService.isbnExists(bookMstDto.getIsbn()) > 0){
+    result.rejectValue("isbn", "duplicate","このISBNは既に登録されています");
 }
+
+        if (result.hasErrors()){
+            return "/book/add";
+        }
+ 
+
+            bookMstService.save(bookMstDto);
+        
+
+            return "redirect:/book/index";
+        
+        }
+    }
