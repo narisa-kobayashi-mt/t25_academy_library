@@ -62,7 +62,7 @@ public class BookController {
 //書籍名必須と文字数チェック
         if(bookMstDto.getTitle() == null || bookMstDto.getTitle().isEmpty()) {
             result.rejectValue("title", "required", "書籍名は必須です");
-        } else {if(bookMstDto.getTitle().length() > 256){
+        } else {if(bookMstDto.getTitle().length() > 255){
                 result.rejectValue("title", "length", "書籍名は255字以内で入力してください");
             }
         }
